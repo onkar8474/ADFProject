@@ -231,13 +231,8 @@
 				},
 				"userProperties": [],
 				"linkedServiceName": {
-					"referenceName": "SQLServerLS",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"ServerName": "TMGLAP269",
-						"UserName": "Rohit",
-						"SqlPassword": "amol@6969"
-					}
+					"referenceName": "AzureSqlDatabaseLS",
+					"type": "LinkedServiceReference"
 				},
 				"typeProperties": {
 					"scripts": [
@@ -385,7 +380,7 @@
 																}
 															],
 															"type": "Query",
-															"text": "insert into [dbo].[Cust_Mexico] select distinct Id values(@id,@fName,@lName,@city,@phone)"
+															"text": "insert into [dbo].[Cust_Mexico] values(@id,@fName,@lName,@city,@phone)"
 														}
 													]
 												}
