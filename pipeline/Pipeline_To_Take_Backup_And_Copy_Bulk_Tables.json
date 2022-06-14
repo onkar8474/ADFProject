@@ -231,13 +231,8 @@
 				},
 				"userProperties": [],
 				"linkedServiceName": {
-					"referenceName": "SQLServerLS",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"ServerName": "TMGLAP269",
-						"UserName": "Rohit",
-						"SqlPassword": "amol@6969"
-					}
+					"referenceName": "AzureSqlDatabaseLS",
+					"type": "LinkedServiceReference"
 				},
 				"typeProperties": {
 					"scripts": [
