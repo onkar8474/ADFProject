@@ -5,9 +5,9 @@
 			"referenceName": "SQLServerLS",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"ServerName": "AZ-VDI-D1-193",
-				"UserName": "sa",
-				"SqlPassword": "sa@1234"
+				"ServerName": "TMGLAP269",
+				"UserName": "Rohit",
+				"SqlPassword": "amol@6969"
 			}
 		},
 		"parameters": {
