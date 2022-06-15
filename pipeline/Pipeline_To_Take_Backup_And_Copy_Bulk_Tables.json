@@ -443,6 +443,7 @@
 															],
 															"type": "Query",
 															"text": "insert into [dbo].[Cust_Mexico] values(@id,@fName,@lName,@city,@phone)"
+ 
 														}
 													]
 												}
@@ -520,6 +521,8 @@
 															],
 															"type": "Query",
 															"text": "insert into [dbo].[Cust_Germany] values(@id,@fName,@lName,@city,@phone)"
+
+
 														}
 													]
 												}
