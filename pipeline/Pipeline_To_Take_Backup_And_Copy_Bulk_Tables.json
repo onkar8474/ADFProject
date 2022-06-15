@@ -210,6 +210,266 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "ForEachTable",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseLS",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "select * from dbo.Customer where Country='Mexico'"
+						}
+					]
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Script1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Script1').output.resultSets[0].rows",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "SwitchActivity",
+							"type": "Switch",
+							"dependsOn": [
+								{
+									"activity": "SetCountryVar",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "SetIdVar",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "SetFirstNameVar",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "SetLastNameVar",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "SetCityVar",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "SetPhoneVar",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"on": {
+									"value": "@variables('CountryName')",
+									"type": "Expression"
+								},
+								"cases": [
+									{
+										"value": "Mexico",
+										"activities": [
+											{
+												"name": "Script_To_Add_Mexico_Cust",
+												"type": "Script",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"linkedServiceName": {
+													"referenceName": "AzureSqlDatabaseLS",
+													"type": "LinkedServiceReference"
+												},
+												"typeProperties": {
+													"scripts": [
+														{
+															"parameters": [
+																{
+																	"name": "id",
+																	"type": "Int32",
+																	"value": {
+																		"value": "@variables('idVar')",
+																		"type": "Expression"
+																	},
+																	"direction": "Input"
+																},
+																{
+																	"name": "fName",
+																	"type": "String",
+																	"value": {
+																		"value": "@variables('firstNameVar')",
+																		"type": "Expression"
+																	},
+																	"direction": "Input"
+																},
+																{
+																	"name": "lName",
+																	"type": "String",
+																	"value": {
+																		"value": "@variables('lastNameVar')",
+																		"type": "Expression"
+																	},
+																	"direction": "Input"
+																},
+																{
+																	"name": "city",
+																	"type": "String",
+																	"value": {
+																		"value": "@variables('cityVar')",
+																		"type": "Expression"
+																	},
+																	"direction": "Input"
+																},
+																{
+																	"name": "phone",
+																	"type": "String",
+																	"value": {
+																		"value": "@variables('phoneVar')",
+																		"type": "Expression"
+																	},
+																	"direction": "Input"
+																}
+															],
+															"type": "Query",
+															"text": "insert into [dbo].[Cust_Mexico] select distinct Id values(@id,@fName,@lName,@city,@phone)"
+														}
+													]
+												}
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "SetCountryVar",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "CountryName",
+								"value": {
+									"value": "@item().country",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "SetIdVar",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "idVar",
+								"value": {
+									"value": "@string(item().Id)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "SetFirstNameVar",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "firstNameVar",
+								"value": {
+									"value": "@item().FirstName",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "SetLastNameVar",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "lastNameVar",
+								"value": {
+									"value": "@item().LastName",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "SetCityVar",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "cityVar",
+								"value": {
+									"value": "@item().City",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "SetPhoneVar",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "phoneVar",
+								"value": {
+									"value": "@item().Phone",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
 			}
 		],
 		"parameters": {
@@ -220,6 +480,26 @@
 				"type": "String"
 			},
 			"pass": {
+				"type": "String"
+			}
+		},
+		"variables": {
+			"CountryName": {
+				"type": "String"
+			},
+			"firstNameVar": {
+				"type": "String"
+			},
+			"lastNameVar": {
+				"type": "String"
+			},
+			"cityVar": {
+				"type": "String"
+			},
+			"phoneVar": {
+				"type": "String"
+			},
+			"idVar": {
 				"type": "String"
 			}
 		},
