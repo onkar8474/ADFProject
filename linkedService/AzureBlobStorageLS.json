@@ -5,6 +5,11 @@
 		"annotations": [],
 		"type": "AzureBlobStorage",
 		"typeProperties": {
+			"connectionString": "DefaultEndpointsProtocol=https;AccountName=adfminiprojectstorage;EndpointSuffix=core.windows.net;",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIxZjc0NWI2Mi01OWQ1LTQ0MDItODIzMC1hMWU1MzBkZGUxZGMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "SelfHostedIR",
 			"connectionString": "DefaultEndpointsProtocol=https;AccountName=tablestoreacc;EndpointSuffix=core.windows.net;",
 			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIxM2UyYWUxMC1iM2ZjLTQ1ODUtYjFhMy0wM2M3ZGY3MWY0NmEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
