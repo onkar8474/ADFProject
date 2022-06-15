@@ -685,12 +685,44 @@
 							}
 						},
 						{
-							"name": "Waitdemo",
-							"type": "Wait",
-							"dependsOn": [],
+							"name": "Script_To_Check_Record_Is_Present_Or_Not",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "SetCountryVar",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "SetIdVar",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
 							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "AzureSqlDatabaseLS",
+								"type": "LinkedServiceReference"
+							},
 							"typeProperties": {
-								"waitTimeInSeconds": 2
+								"scripts": [
+									{
+										"type": "NonQuery",
+										"text": {
+											"value": "@concat('select count(*) from dbo.Cust_',variables('CountryName'),' where Id=',variables('idVar'))",
+											"type": "Expression"
+										}
+									}
+								]
 							}
 						}
 					]
