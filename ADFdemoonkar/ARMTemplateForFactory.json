@@ -715,6 +715,15 @@
 											"type": "Expression"
 										}
 									}
+								},
+								{
+									"name": "Waitdemo",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 2
+									}
 								}
 							]
 						}
