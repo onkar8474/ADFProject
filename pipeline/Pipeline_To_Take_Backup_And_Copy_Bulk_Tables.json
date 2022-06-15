@@ -443,7 +443,6 @@
 															],
 															"type": "Query",
 															"text": "insert into [dbo].[Cust_Mexico] values(@id,@fName,@lName,@city,@phone)"
- 
 														}
 													]
 												}
@@ -521,8 +520,83 @@
 															],
 															"type": "Query",
 															"text": "insert into [dbo].[Cust_Germany] values(@id,@fName,@lName,@city,@phone)"
-
-
+														}
+													]
+												}
+											}
+										]
+									},
+									{
+										"value": "UK",
+										"activities": [
+											{
+												"name": "Script_To_Add_UK_Cust",
+												"type": "Script",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"linkedServiceName": {
+													"referenceName": "AzureSqlDatabaseLS",
+													"type": "LinkedServiceReference"
+												},
+												"typeProperties": {
+													"scripts": [
+														{
+															"parameters": [
+																{
+																	"name": "Id",
+																	"type": "Int32",
+																	"value": {
+																		"value": "@variables('idVar')",
+																		"type": "Expression"
+																	},
+																	"direction": "Input"
+																},
+																{
+																	"name": "FirstName",
+																	"type": "String",
+																	"value": {
+																		"value": "@variables('firstNameVar')",
+																		"type": "Expression"
+																	},
+																	"direction": "Input"
+																},
+																{
+																	"name": "LastName",
+																	"type": "String",
+																	"value": {
+																		"value": "@variables('lastNameVar')",
+																		"type": "Expression"
+																	},
+																	"direction": "Input"
+																},
+																{
+																	"name": "City",
+																	"type": "String",
+																	"value": {
+																		"value": "@variables('cityVar')",
+																		"type": "Expression"
+																	},
+																	"direction": "Input"
+																},
+																{
+																	"name": "Phone",
+																	"type": "String",
+																	"value": {
+																		"value": "@variables('phoneVar')",
+																		"type": "Expression"
+																	},
+																	"direction": "Input"
+																}
+															],
+															"type": "Query",
+															"text": "insert into [dbo].[Cust_UK] values(@Id,@FirstName,@LastName,@City,@Phone)"
 														}
 													]
 												}
