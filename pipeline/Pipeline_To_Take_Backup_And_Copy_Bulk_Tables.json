@@ -513,7 +513,7 @@
 							}
 						},
 						{
-							"name": "Script_To_Create_Table_If_Doesnt_Exist_copy1",
+							"name": "Script_To_Create_Table_If_Doesnt_Exist_And_Insert_Data",
 							"type": "Script",
 							"dependsOn": [
 								{
