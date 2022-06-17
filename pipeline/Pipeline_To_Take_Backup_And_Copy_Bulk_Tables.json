@@ -43,7 +43,7 @@
 				}
 			},
 			{
-				"name": "ForEachTable",
+				"name": "ForEach_To_Copy_Tables",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -274,39 +274,7 @@
 				}
 			},
 			{
-				"name": "Script_To_Get_All_Rows",
-				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "ForEachTable",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabaseLS",
-					"type": "LinkedServiceReference"
-				},
-				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": "select * from dbo.Customer"
-						}
-					]
-				}
-			},
-			{
-				"name": "ForEach1",
+				"name": "ForEach_To_Insert_Rows",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -324,288 +292,6 @@
 					},
 					"isSequential": true,
 					"activities": [
-						{
-							"name": "SwitchActivity",
-							"type": "Switch",
-							"dependsOn": [
-								{
-									"activity": "SetCountryVar",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								},
-								{
-									"activity": "SetIdVar",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								},
-								{
-									"activity": "SetFirstNameVar",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								},
-								{
-									"activity": "SetLastNameVar",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								},
-								{
-									"activity": "SetCityVar",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								},
-								{
-									"activity": "SetPhoneVar",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"on": {
-									"value": "@variables('CountryName')",
-									"type": "Expression"
-								},
-								"cases": [
-									{
-										"value": "Mexico",
-										"activities": [
-											{
-												"name": "Script_To_Add_Mexico_Cust",
-												"type": "Script",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"linkedServiceName": {
-													"referenceName": "AzureSqlDatabaseLS",
-													"type": "LinkedServiceReference"
-												},
-												"typeProperties": {
-													"scripts": [
-														{
-															"parameters": [
-																{
-																	"name": "id",
-																	"type": "Int32",
-																	"value": {
-																		"value": "@variables('idVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																},
-																{
-																	"name": "fName",
-																	"type": "String",
-																	"value": {
-																		"value": "@variables('firstNameVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																},
-																{
-																	"name": "lName",
-																	"type": "String",
-																	"value": {
-																		"value": "@variables('lastNameVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																},
-																{
-																	"name": "city",
-																	"type": "String",
-																	"value": {
-																		"value": "@variables('cityVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																},
-																{
-																	"name": "phone",
-																	"type": "String",
-																	"value": {
-																		"value": "@variables('phoneVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																}
-															],
-															"type": "Query",
-															"text": "insert into [dbo].[Cust_Mexico] values(@id,@fName,@lName,@city,@phone)"
-														}
-													]
-												}
-											}
-										]
-									},
-									{
-										"value": "Germany",
-										"activities": [
-											{
-												"name": "Script_To_Add_German_Cust",
-												"type": "Script",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"linkedServiceName": {
-													"referenceName": "AzureSqlDatabaseLS",
-													"type": "LinkedServiceReference"
-												},
-												"typeProperties": {
-													"scripts": [
-														{
-															"parameters": [
-																{
-																	"name": "id",
-																	"type": "Int32",
-																	"value": {
-																		"value": "@variables('idVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																},
-																{
-																	"name": "fName",
-																	"type": "String",
-																	"value": {
-																		"value": "@variables('firstNameVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																},
-																{
-																	"name": "lName",
-																	"type": "String",
-																	"value": {
-																		"value": "@variables('lastNameVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																},
-																{
-																	"name": "city",
-																	"type": "String",
-																	"value": {
-																		"value": "@variables('cityVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																},
-																{
-																	"name": "phone",
-																	"type": "String",
-																	"value": {
-																		"value": "@variables('phoneVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																}
-															],
-															"type": "Query",
-															"text": "insert into [dbo].[Cust_Germany] values(@id,@fName,@lName,@city,@phone)"
-														}
-													]
-												}
-											}
-										]
-									},
-									{
-										"value": "UK",
-										"activities": [
-											{
-												"name": "Script_To_Add_UK_Cust",
-												"type": "Script",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"linkedServiceName": {
-													"referenceName": "AzureSqlDatabaseLS",
-													"type": "LinkedServiceReference"
-												},
-												"typeProperties": {
-													"scripts": [
-														{
-															"parameters": [
-																{
-																	"name": "Id",
-																	"type": "Int32",
-																	"value": {
-																		"value": "@variables('idVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																},
-																{
-																	"name": "FirstName",
-																	"type": "String",
-																	"value": {
-																		"value": "@variables('firstNameVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																},
-																{
-																	"name": "LastName",
-																	"type": "String",
-																	"value": {
-																		"value": "@variables('lastNameVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																},
-																{
-																	"name": "City",
-																	"type": "String",
-																	"value": {
-																		"value": "@variables('cityVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																},
-																{
-																	"name": "Phone",
-																	"type": "String",
-																	"value": {
-																		"value": "@variables('phoneVar')",
-																		"type": "Expression"
-																	},
-																	"direction": "Input"
-																}
-															],
-															"type": "Query",
-															"text": "insert into [dbo].[Cust_UK] values(@Id,@FirstName,@LastName,@City,@Phone)"
-														}
-													]
-												}
-											}
-										]
-									}
-								]
-							}
-						},
 						{
 							"name": "SetCountryVar",
 							"type": "SetVariable",
@@ -699,6 +385,30 @@
 									"dependencyConditions": [
 										"Succeeded"
 									]
+								},
+								{
+									"activity": "SetFirstNameVar",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "SetLastNameVar",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "SetCityVar",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "SetPhoneVar",
+									"dependencyConditions": [
+										"Succeeded"
+									]
 								}
 							],
 							"policy": {
@@ -716,14 +426,179 @@
 							"typeProperties": {
 								"scripts": [
 									{
-										"type": "NonQuery",
+										"type": "Query",
 										"text": {
-											"value": "@concat('select count(*) from dbo.Cust_',variables('CountryName'),' where Id=',variables('idVar'))",
+											"value": "@concat('select * from dbo.Cust_',variables('CountryName'),' where Id=',variables('idVar'))",
 											"type": "Expression"
 										}
 									}
 								]
 							}
+						},
+						{
+							"name": "If Condition1",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Script_To_Check_Record_Is_Present_Or_Not",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@empty(activity('Script_To_Check_Record_Is_Present_Or_Not').output.resultSets)",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "Else_Block_Wait",
+										"type": "Wait",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"waitTimeInSeconds": 1
+										}
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "Script_To_Insert_Row",
+										"type": "Script",
+										"dependsOn": [
+											{
+												"activity": "Set Table Name",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"linkedServiceName": {
+											"referenceName": "AzureSqlDatabaseLS",
+											"type": "LinkedServiceReference"
+										},
+										"typeProperties": {
+											"scripts": [
+												{
+													"parameters": [
+														{
+															"name": "id",
+															"type": "Int32",
+															"value": {
+																"value": "@variables('idVar')",
+																"type": "Expression"
+															},
+															"direction": "Input"
+														},
+														{
+															"name": "fname",
+															"type": "String",
+															"value": {
+																"value": "@variables('firstNameVar')",
+																"type": "Expression"
+															},
+															"direction": "Input"
+														},
+														{
+															"name": "lname",
+															"type": "String",
+															"value": {
+																"value": "@variables('lastNameVar')",
+																"type": "Expression"
+															},
+															"direction": "Input"
+														},
+														{
+															"name": "city",
+															"type": "String",
+															"value": {
+																"value": "@variables('cityVar')",
+																"type": "Expression"
+															},
+															"direction": "Input"
+														},
+														{
+															"name": "phone",
+															"type": "String",
+															"value": {
+																"value": "@variables('phoneVar')",
+																"type": "Expression"
+															},
+															"direction": "Input"
+														},
+														{
+															"name": "tableName",
+															"type": "String",
+															"value": {
+																"value": "@variables('tableName')",
+																"type": "Expression"
+															},
+															"direction": "Input"
+														}
+													],
+													"type": "NonQuery",
+													"text": "insert into @{variables('tableName')} values(@id,@fname,@lname,@city,@phone)"
+												}
+											]
+										}
+									},
+									{
+										"name": "Set Table Name",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "tableName",
+											"value": {
+												"value": "@concat('dbo.Cust_',variables('CountryName'))",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Script_To_Get_All_Rows",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "ForEach_To_Copy_Tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseLS",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "select * from dbo.Customer"
 						}
 					]
 				}
@@ -760,6 +635,9 @@
 				"type": "String"
 			},
 			"Columns": {
+				"type": "String"
+			},
+			"tableName": {
 				"type": "String"
 			}
 		},
