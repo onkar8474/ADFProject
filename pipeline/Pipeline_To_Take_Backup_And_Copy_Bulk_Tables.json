@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "select TABLE_SCHEMA as sname, TABLE_NAME as name from INFORMATION_SCHEMA.TABLES",
+						"sqlReaderQuery": "select name from sys.tables",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -62,7 +62,7 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "BackupTablesToAzureSQL",
+							"name": "TableBackupActivity",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -80,17 +80,15 @@
 									"partitionOption": "None"
 								},
 								"sink": {
-									"type": "AzureSqlSink",
-									"writeBehavior": "upsert",
-									"upsertSettings": {
-										"useTempDB": true,
-										"keys": [
-											"ID"
-										]
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
 									},
-									"sqlWriterUseTableLock": false,
-									"tableOption": "autoCreate",
-									"disableMetricsCollection": false
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
 								},
 								"enableStaging": false,
 								"translator": {
@@ -110,50 +108,29 @@
 										"TableNameDS": {
 											"value": "@item().name",
 											"type": "Expression"
-										},
-										"SchemaNameDS": {
-											"value": "@item().sname",
-											"type": "Expression"
 										}
 									}
 								}
 							],
 							"outputs": [
 								{
-									"referenceName": "AzureSqlTableDestinationDS",
+									"referenceName": "AzureBlobBackupDS",
 									"type": "DatasetReference",
 									"parameters": {
-										"TableNameDS": {
+										"TableName": {
 											"value": "@item().name",
 											"type": "Expression"
-										},
-										"SchemaDS": "Arc"
+										}
 									}
 								}
 							]
-						},
-						{
-							"name": "Wait",
-							"type": "Wait",
-							"dependsOn": [
-								{
-									"activity": "BackupTablesToAzureSQL",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"waitTimeInSeconds": 2
-							}
 						},
 						{
 							"name": "CopyTablesToAzureSQL",
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "Wait",
+									"activity": "Wait1",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -179,7 +156,7 @@
 									"upsertSettings": {
 										"useTempDB": true,
 										"keys": [
-											"ID"
+											"Id"
 										]
 									},
 									"sqlWriterUseTableLock": false,
@@ -204,10 +181,6 @@
 										"TableNameDS": {
 											"value": "@item().name",
 											"type": "Expression"
-										},
-										"SchemaNameDS": {
-											"value": "@item().sname",
-											"type": "Expression"
 										}
 									}
 								}
@@ -220,14 +193,26 @@
 										"TableNameDS": {
 											"value": "@item().name",
 											"type": "Expression"
-										},
-										"SchemaDS": {
-											"value": "@item().sname",
-											"type": "Expression"
 										}
 									}
 								}
 							]
+						},
+						{
+							"name": "Wait1",
+							"type": "Wait",
+							"dependsOn": [
+								{
+									"activity": "TableBackupActivity",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 2
+							}
 						}
 					]
 				}
@@ -395,7 +380,7 @@
 							}
 						},
 						{
-							"name": "If Condition",
+							"name": "If Condition1",
 							"type": "IfCondition",
 							"dependsOn": [
 								{
@@ -428,7 +413,7 @@
 										"type": "Script",
 										"dependsOn": [
 											{
-												"activity": "Set Table Name 2",
+												"activity": "Set Table Name",
 												"dependencyConditions": [
 													"Succeeded"
 												]
@@ -515,7 +500,7 @@
 										}
 									},
 									{
-										"name": "Set Table Name 2",
+										"name": "Set Table Name",
 										"type": "SetVariable",
 										"dependsOn": [],
 										"userProperties": [],
@@ -528,117 +513,6 @@
 										}
 									}
 								]
-							}
-						},
-						{
-							"name": "Script_To_Create_Table_If_Doesnt_Exist_And_Insert_Data",
-							"type": "Script",
-							"dependsOn": [
-								{
-									"activity": "Set Table Name_1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"linkedServiceName": {
-								"referenceName": "AzureSqlDatabaseLS",
-								"type": "LinkedServiceReference"
-							},
-							"typeProperties": {
-								"scripts": [
-									{
-										"parameters": [
-											{
-												"name": "tableName",
-												"type": "String",
-												"value": {
-													"value": "@variables('tableName')",
-													"type": "Expression"
-												},
-												"direction": "Input"
-											},
-											{
-												"name": "id",
-												"type": "Int32",
-												"value": {
-													"value": "@variables('idVar')",
-													"type": "Expression"
-												},
-												"direction": "Input"
-											},
-											{
-												"name": "fName",
-												"type": "String",
-												"value": {
-													"value": "@variables('firstNameVar')",
-													"type": "Expression"
-												},
-												"direction": "Input"
-											},
-											{
-												"name": "lName",
-												"type": "String",
-												"value": {
-													"value": "@variables('lastNameVar')",
-													"type": "Expression"
-												},
-												"direction": "Input"
-											},
-											{
-												"name": "city",
-												"type": "String",
-												"value": {
-													"value": "@variables('cityVar')",
-													"type": "Expression"
-												},
-												"direction": "Input"
-											},
-											{
-												"name": "phone",
-												"type": "String",
-												"value": {
-													"value": "@variables('phoneVar')",
-													"type": "Expression"
-												},
-												"direction": "Input"
-											}
-										],
-										"type": "NonQuery",
-										"text": {
-											"value": "create table @{variables('tableName')} (Id int, FirstName varchar(40), LastName varchar(40), City varchar(40), Phone varchar(40));\ninsert into @{variables('tableName')} values(@id,@fName,@lName,@city,@phone);",
-											"type": "Expression"
-										}
-									}
-								]
-							}
-						},
-						{
-							"name": "Set Table Name_1",
-							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Script_To_Check_Record_Is_Present_Or_Not",
-									"dependencyConditions": [
-										"Failed"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "tableName",
-								"value": {
-									"value": "@concat('dbo.Cust_',variables('CountryName'))",
-									"type": "Expression"
-								}
 							}
 						}
 					]

@@ -5,27 +5,21 @@
 			"referenceName": "SQLServerLS",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"ServerName": "AZ-VDI-D1-262",
+				"ServerName": "TMGLAP807\\MSSQLSERVER3",
 				"UserName": "sa",
-				"SqlPassword": "sa@123"
+				"SqlPassword": "sa@12345"
 			}
 		},
 		"parameters": {
 			"TableNameDS": {
 				"type": "string"
-			},
-			"SchemaNameDS": {
-				"type": "String"
 			}
 		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": {
-				"value": "@dataset().SchemaNameDS",
-				"type": "Expression"
-			},
+			"schema": "dbo",
 			"table": {
 				"value": "@dataset().TableNameDS",
 				"type": "Expression"

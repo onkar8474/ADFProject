@@ -16,7 +16,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@concat('Trgr_',dataset().TableName,'_',utcnow(),'.csv')",
+					"value": "@concat(dataset().TableName,'_',utcnow(),'.csv')",
 					"type": "Expression"
 				},
 				"folderPath": "OutputFolder",
