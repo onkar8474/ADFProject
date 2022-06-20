@@ -1,6 +1,12 @@
 {
 	"name": "SelfHostedIR",
 	"properties": {
-		"type": "SelfHosted"
+		"type": "SelfHosted",
+		"typeProperties": {
+			"linkedInfo": {
+				"resourceId": "/subscriptions/7d21d560-a9c2-4fa4-9591-ee1ff2ac4ca3/resourcegroups/TestEnviorment/providers/Microsoft.DataFactory/factories/scopydf/integrationruntimes/selfHostedIR",
+				"authorizationType": "Rbac"
+			}
+		}
 	}
 }

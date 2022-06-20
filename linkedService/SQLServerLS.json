@@ -5,15 +5,15 @@
 		"parameters": {
 			"ServerName": {
 				"type": "String",
-				"defaultValue": "TMGLAP269"
+				"defaultValue": "AZ-VDI-D1-193"
 			},
 			"UserName": {
 				"type": "String",
-				"defaultValue": "Rohit"
+				"defaultValue": "sa"
 			},
 			"SqlPassword": {
 				"type": "String",
-				"defaultValue": "amol@6969"
+				"defaultValue": "sa@1234"
 			}
 		},
 		"annotations": [],
