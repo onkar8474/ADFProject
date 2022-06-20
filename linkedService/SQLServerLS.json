@@ -5,7 +5,9 @@
 		"parameters": {
 			"ServerName": {
 				"type": "String",
-				"defaultValue": "AZ-VDI-D1-214"
+
+				"defaultValue": "AZ-VDI-D1-262"
+
 			},
 			"UserName": {
 				"type": "String",
@@ -22,8 +24,9 @@
 			"connectionString": "Integrated Security=False;Data Source=@{linkedService().ServerName};Initial Catalog=ADFDB;User ID=@{linkedService().UserName};Password=@{linkedService().SqlPassword}"
 		},
 		"connectVia": {
-			"referenceName": "SelfHostedIntegrationIR",
-			"type": "IntegrationRuntimeReference"
+
+			"referenceName": "SelfHostedIntegrationRuntime",
+
 		}
 	}
 }
