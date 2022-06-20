@@ -5,7 +5,7 @@
 		"parameters": {
 			"ServerName": {
 				"type": "String",
-				"defaultValue": "TMGLAP807\\MSSQLSERVER3"
+				"defaultValue": "AZ-VDI-D1-214"
 			},
 			"UserName": {
 				"type": "String",
@@ -13,7 +13,7 @@
 			},
 			"SqlPassword": {
 				"type": "String",
-				"defaultValue": "sa@12345"
+				"defaultValue": "sa@123"
 			}
 		},
 		"annotations": [],
