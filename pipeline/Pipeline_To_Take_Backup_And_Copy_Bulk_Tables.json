@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "select name from sys.tables",
+						"sqlReaderQuery": "select TABLE_SCHEMA as sname, TABLE_NAME as name from INFORMATION_SCHEMA.TABLES",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -62,7 +62,7 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "TableBackupActivity",
+							"name": "BackupTablesToAzureSQL",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -80,15 +80,17 @@
 									"partitionOption": "None"
 								},
 								"sink": {
-									"type": "DelimitedTextSink",
-									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
+									"type": "AzureSqlSink",
+									"writeBehavior": "upsert",
+									"upsertSettings": {
+										"useTempDB": true,
+										"keys": [
+											"ID"
+										]
 									},
-									"formatSettings": {
-										"type": "DelimitedTextWriteSettings",
-										"quoteAllText": true,
-										"fileExtension": ".txt"
-									}
+									"sqlWriterUseTableLock": false,
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
 								},
 								"enableStaging": false,
 								"translator": {
@@ -108,29 +110,50 @@
 										"TableNameDS": {
 											"value": "@item().name",
 											"type": "Expression"
+										},
+										"SchemaNameDS": {
+											"value": "@item().sname",
+											"type": "Expression"
 										}
 									}
 								}
 							],
 							"outputs": [
 								{
-									"referenceName": "AzureBlobBackupDS",
+									"referenceName": "AzureSqlTableDestinationDS",
 									"type": "DatasetReference",
 									"parameters": {
-										"TableName": {
+										"TableNameDS": {
 											"value": "@item().name",
 											"type": "Expression"
-										}
+										},
+										"SchemaDS": "Arc"
 									}
 								}
 							]
+						},
+						{
+							"name": "Wait",
+							"type": "Wait",
+							"dependsOn": [
+								{
+									"activity": "BackupTablesToAzureSQL",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 2
+							}
 						},
 						{
 							"name": "CopyTablesToAzureSQL",
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "Wait1",
+									"activity": "Wait",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -156,7 +179,7 @@
 									"upsertSettings": {
 										"useTempDB": true,
 										"keys": [
-											"Id"
+											"ID"
 										]
 									},
 									"sqlWriterUseTableLock": false,
@@ -181,6 +204,10 @@
 										"TableNameDS": {
 											"value": "@item().name",
 											"type": "Expression"
+										},
+										"SchemaNameDS": {
+											"value": "@item().sname",
+											"type": "Expression"
 										}
 									}
 								}
@@ -193,26 +220,14 @@
 										"TableNameDS": {
 											"value": "@item().name",
 											"type": "Expression"
+										},
+										"SchemaDS": {
+											"value": "@item().sname",
+											"type": "Expression"
 										}
 									}
 								}
 							]
-						},
-						{
-							"name": "Wait1",
-							"type": "Wait",
-							"dependsOn": [
-								{
-									"activity": "TableBackupActivity",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"waitTimeInSeconds": 2
-							}
 						}
 					]
 				}
@@ -491,7 +506,10 @@
 														}
 													],
 													"type": "NonQuery",
-													"text": "insert into @{variables('tableName')} values(@id,@fname,@lname,@city,@phone)"
+													"text": {
+														"value": "insert into @{variables('tableName')} values(@id,@fname,@lname,@city,@phone)",
+														"type": "Expression"
+													}
 												}
 											]
 										}
@@ -595,7 +613,10 @@
 											}
 										],
 										"type": "NonQuery",
-										"text": "create table @{variables('tableName')} (Id int, FirstName varchar(40), LastName varchar(40), City varchar(40), Phone varchar(40));\ninsert into @{variables('tableName')} values(@id,@fName,@lName,@city,@phone);"
+										"text": {
+											"value": "create table @{variables('tableName')} (Id int, FirstName varchar(40), LastName varchar(40), City varchar(40), Phone varchar(40));\ninsert into @{variables('tableName')} values(@id,@fName,@lName,@city,@phone);",
+											"type": "Expression"
+										}
 									}
 								]
 							}

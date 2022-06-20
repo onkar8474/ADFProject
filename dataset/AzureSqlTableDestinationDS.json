@@ -8,13 +8,19 @@
 		"parameters": {
 			"TableNameDS": {
 				"type": "string"
+			},
+			"SchemaDS": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "dbo",
+			"schema": {
+				"value": "@dataset().SchemaDS",
+				"type": "Expression"
+			},
 			"table": {
 				"value": "@dataset().TableNameDS",
 				"type": "Expression"
