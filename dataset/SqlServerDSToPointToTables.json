@@ -2,12 +2,12 @@
 	"name": "SqlServerDSToPointToTables",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "SQLServerLS",
+			"referenceName": "SqlServerLS",
 			"type": "LinkedServiceReference",
 			"parameters": {
 				"ServerName": "AZ-VDI-D1-262",
 				"UserName": "sa",
-				"SqlPassword": "sa@123"
+				"Password": "sa@123"
 			}
 		},
 		"parameters": {

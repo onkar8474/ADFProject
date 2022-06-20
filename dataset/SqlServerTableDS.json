@@ -2,21 +2,12 @@
 	"name": "SqlServerTableDS",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "SQLServerLS",
+			"referenceName": "SqlServerLS",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"ServerName": {
-					"value": "@dataset().server_name",
-					"type": "Expression"
-				},
-				"UserName": {
-					"value": "@dataset().user_name",
-					"type": "Expression"
-				},
-				"SqlPassword": {
-					"value": "@dataset().pass_word",
-					"type": "Expression"
-				}
+				"ServerName": "AZ-VDI-D1-262",
+				"UserName": "sa",
+				"Password": "sa@123"
 			}
 		},
 		"parameters": {
