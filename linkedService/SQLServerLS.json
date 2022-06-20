@@ -22,7 +22,7 @@
 			"connectionString": "Integrated Security=False;Data Source=@{linkedService().ServerName};Initial Catalog=eBS4_INT_QA2;User ID=@{linkedService().UserName};Password=@{linkedService().SqlPassword}"
 		},
 		"connectVia": {
-			"referenceName": "SelfHostedIR",
+			"referenceName": "SelfHostedIntegrationIR",
 			"type": "IntegrationRuntimeReference"
 		}
 	}
