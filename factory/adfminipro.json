@@ -1,0 +1,9 @@
+{
+	"name": "adfminipro",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "93e26751-fa95-4e71-9fe6-1d88d20f4890",
+		"tenantId": "57084445-e440-441f-bc3f-fabe8cbb2535"
+	}
+}
